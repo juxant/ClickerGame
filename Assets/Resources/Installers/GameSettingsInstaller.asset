@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f040ed3a73fc8e49a49fe95bf4d59b4, type: 3}
+  m_Name: GameSettingsInstaller
+  m_EditorClassIdentifier: 
+  <Item>k__BackingField:
+    <Coin>k__BackingField:
+      <Speed>k__BackingField: 0
+      <LifeTime>k__BackingField: 0
+    <BlueSphere>k__BackingField:
+      <Speed>k__BackingField: 0
+      <LifeTime>k__BackingField: 0
+    <YellowBlock>k__BackingField:
+      <Speed>k__BackingField: 0
+      <LifeTime>k__BackingField: 0
+    <RedBox>k__BackingField:
+      <Speed>k__BackingField: 0
+      <LifeTime>k__BackingField: 0
+    <Shield>k__BackingField:
+      <Speed>k__BackingField: 0
+      <LifeTime>k__BackingField: 0
+    <Target>k__BackingField:
+      <Speed>k__BackingField: 0
+      <LifeTime>k__BackingField: 0
+  <GlobalInstaller>k__BackingField:
+    <CoinPrefab>k__BackingField: {fileID: 1591165099382186, guid: 160a6121b4d25254da31bdab63ad82b7, type: 3}
+    <BlueSpherePrefab>k__BackingField: {fileID: 1808265353395088, guid: 296b6c6ad62626c48aef7fa6c5e2a9a8, type: 3}
+    <YellowBlockPrefab>k__BackingField: {fileID: 1978775886026106, guid: bbc12ae2f967ec04e8c3c39eeb92733b, type: 3}
+    <RedBoxPrefab>k__BackingField: {fileID: 1118085362977378, guid: 5527826a6315a224d850675a730c4f62, type: 3}
+    <ShieldPrefab>k__BackingField: {fileID: 1443614743384344, guid: 90fb214880065ca44be9cb53bcbd6780, type: 3}
+    <TargetPrefab>k__BackingField: {fileID: 1208871959118300, guid: e0d3f8289f60e1e49a5d66d5eb8582f3, type: 3}
