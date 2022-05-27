@@ -10,6 +10,8 @@ namespace ClickerGame
 
         public override void InstallBindings()
         {
+            InstallSignals();
+
             var items = new GameObject("Items").transform;
 
             var coins = new GameObject("Coins").transform;
@@ -30,41 +32,57 @@ namespace ClickerGame
             var target = new GameObject("Target").transform;
             target.SetParent(items.transform);
 
-            Container.BindFactory<Coin, Coin.Factory>()
+            Container.BindFactoryCustomInterface<Item, Coin.Factory, Item.Factory>()
+                .To<Coin>()
                 .FromPoolableMemoryPool<Coin, CoinPool>(poolBinder => poolBinder
-                    .WithInitialSize(20)
-                    .FromComponentInNewPrefab(_settings.CoinPrefab)
-                    .UnderTransform(coins));
+                .WithInitialSize(20)
+                .FromComponentInNewPrefab(_settings.CoinPrefab)
+                .UnderTransform(coins));
 
-            Container.BindFactory<BlueSphere, BlueSphere.Factory>()
+            Container.BindFactoryCustomInterface<Item, BlueSphere.Factory, Item.Factory>()
+                .To<BlueSphere>()
                 .FromPoolableMemoryPool<BlueSphere, BlueSpherePool>(poolBinder => poolBinder
-                    .WithInitialSize(20)
-                    .FromComponentInNewPrefab(_settings.BlueSpherePrefab)
-                    .UnderTransform(blueSphere));
+                .WithInitialSize(20)
+                .FromComponentInNewPrefab(_settings.BlueSpherePrefab)
+                .UnderTransform(blueSphere));
 
-            Container.BindFactory<YellowBlock, YellowBlock.Factory>()
+            Container.BindFactoryCustomInterface<Item, YellowBlock.Factory, Item.Factory>()
+                .To<YellowBlock>()
                 .FromPoolableMemoryPool<YellowBlock, YellowBlockPool>(poolBinder => poolBinder
-                    .WithInitialSize(20)
-                    .FromComponentInNewPrefab(_settings.YellowBlockPrefab)
-                    .UnderTransform(yellowBlock));
+                .WithInitialSize(20)
+                .FromComponentInNewPrefab(_settings.YellowBlockPrefab)
+                .UnderTransform(yellowBlock));
 
-            Container.BindFactory<RedBox, RedBox.Factory>()
+            Container.BindFactoryCustomInterface<Item, RedBox.Factory, Item.Factory>()
+                .To<RedBox>()
                 .FromPoolableMemoryPool<RedBox, RedBoxPool>(poolBinder => poolBinder
-                    .WithInitialSize(20)
-                    .FromComponentInNewPrefab(_settings.RedBoxPrefab)
-                    .UnderTransform(redBox));
+                .WithInitialSize(20)
+                .FromComponentInNewPrefab(_settings.RedBoxPrefab)
+                .UnderTransform(redBox));
 
-            Container.BindFactory<Shield, Shield.Factory>()
+            Container.BindFactoryCustomInterface<Item, Shield.Factory, Item.Factory>()
+                .To<Shield>()
                 .FromPoolableMemoryPool<Shield, ShieldPool>(poolBinder => poolBinder
-                    .WithInitialSize(20)
-                    .FromComponentInNewPrefab(_settings.ShieldPrefab)
-                    .UnderTransform(shield));
+                .WithInitialSize(20)
+                .FromComponentInNewPrefab(_settings.ShieldPrefab)
+                .UnderTransform(shield));
 
-            Container.BindFactory<Target, Target.Factory>()
+            Container.BindFactoryCustomInterface<Item, Target.Factory, Item.Factory>()
+                .To<Target>()
                 .FromPoolableMemoryPool<Target, TargetPool>(poolBinder => poolBinder
-                    .WithInitialSize(20)
-                    .FromComponentInNewPrefab(_settings.TargetPrefab)
-                    .UnderTransform(target));
+                .WithInitialSize(20)
+                .FromComponentInNewPrefab(_settings.TargetPrefab)
+                .UnderTransform(target));
+
+            Container.Bind<LevelBoundary>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ItemSpawner>().AsSingle();
+        }
+
+        void InstallSignals()
+        {
+            SignalBusInstaller.Install(Container);
+
+            Container.DeclareSignal<ItemDestroyedSignal>();
         }
 
         [Serializable]

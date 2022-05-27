@@ -8,9 +8,10 @@ namespace ClickerGame
         Settings _settings;
 
         [Inject]
-        public void Construct(Settings settings)
+        public void Construct(Settings settings,
+                            SignalBus signalBus)
         {
-            base.Construct(settings);
+            base.Construct(settings, signalBus);
             _settings = settings;
         }
 
@@ -19,8 +20,11 @@ namespace ClickerGame
         {
         }
 
-        public class Factory : PlaceholderFactory<Target>
+        public new class Factory : Item.Factory
         {
+            public Factory(Settings settings) : base(settings)
+            {
+            }
         }
     }
 }
