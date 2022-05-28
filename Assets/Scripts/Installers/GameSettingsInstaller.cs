@@ -7,7 +7,7 @@ namespace ClickerGame
     [CreateAssetMenu(menuName = "ClickerGame/Game Settings")]
     public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInstaller>
     {
-        [field: SerializeField] public GlobalInstaller.Settings GlobalInstaller { get; private set; }
+        [field: SerializeField] public GameInstaller.Settings GameInstaller { get; private set; }
         [field: SerializeField] public LevelBoundary.Settings LevelBoundary { get; private set; }
         [field: SerializeField] public ItemSettings Item { get; private set; }
                
@@ -20,7 +20,7 @@ namespace ClickerGame
             Container.BindInstance(Item.RedBox);
             Container.BindInstance(Item.Shield);
             Container.BindInstance(Item.Target);
-            Container.BindInstance(GlobalInstaller);
+            Container.BindInstance(GameInstaller);
             Container.BindInstance(LevelBoundary);
         }
 

@@ -6,10 +6,10 @@ using Zenject;
 
 namespace ClickerGame
 {
-    public class ItemSpawner : ITickable, IInitializable
+    public class ItemSpawner : ITickable, IInitializable, IDisposable
     {
         readonly Queue<Item> _itemsToSpawn;
-        readonly List<Item.Factory> _items;
+        readonly List<Item.Factory> _itemFactories;
         readonly Settings _settings;
         readonly SignalBus _signalBus;
         private readonly LevelBoundary _levelBoundary;
@@ -19,13 +19,13 @@ namespace ClickerGame
         int _itemCount;
         float _lastSpawnTime;
 
-        public ItemSpawner(List<Item.Factory> items,
+        public ItemSpawner(List<Item.Factory> itemFactories,
                         Settings settings,
                         SignalBus signalBus,
                         LevelBoundary levelBoundary)
         {
             _itemsToSpawn = new Queue<Item>();
-            _items = items;
+            _itemFactories = itemFactories;
             _settings = settings;
             _signalBus = signalBus;
             _levelBoundary = levelBoundary;
@@ -47,6 +47,7 @@ namespace ClickerGame
             if (_itemsToSpawn.Count < _settings.MaxItemsToBeEnqueue)
             {
                 EnqueueRandomItemByChance();
+                Debug.Log(_settings.MaxItemsInScreen);
             }
 
             if (_itemCount < _settings.MaxItemsInScreen
@@ -58,7 +59,7 @@ namespace ClickerGame
 
         void EnqueueItems(ItemToBeEnqueueSignal itemToBeEnqueue)
         {
-            var itemFactory = _items.FirstOrDefault(x => x.GetType() == itemToBeEnqueue.Type);
+            var itemFactory = _itemFactories.FirstOrDefault(x => x.GetType() == itemToBeEnqueue.Type);
             _itemsToSpawn.Clear();
 
             for (int i = 0; i < itemToBeEnqueue.Count; i++)
@@ -69,8 +70,9 @@ namespace ClickerGame
 
         void EnqueueRandomItemByChance()
         {
-            var itemFactory = SelectRandomItemByChance(_items);
-            _itemsToSpawn.Enqueue(itemFactory.Create());
+            var itemFactory = SelectRandomItemByChance(_itemFactories);
+            var item = itemFactory.Create();
+            _itemsToSpawn.Enqueue(item);
         }
 
         void SpawnItem()
@@ -102,7 +104,7 @@ namespace ClickerGame
             Item.Factory itemSelected = null;
 
             var poolSize = items.Sum(x => x.Settings.SpawnChance);
-            var randomNumber = UnityEngine.Random.Range(0f, poolSize) + 1f;
+            var randomNumber = UnityEngine.Random.Range(0f, poolSize);
 
             var accumulatedProbability = 0f;
             for (var i = 0; i < items.Count; i++)
@@ -116,6 +118,12 @@ namespace ClickerGame
             }
 
             return itemSelected;
+        }
+
+        public void Dispose()
+        {
+            _signalBus.Unsubscribe<ItemDestroyedSignal>(OnItemDestroyed);
+            _signalBus.Unsubscribe<ItemToBeEnqueueSignal>(EnqueueItems);
         }
 
         [Serializable]
