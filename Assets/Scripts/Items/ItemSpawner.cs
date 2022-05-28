@@ -8,13 +8,15 @@ namespace ClickerGame
 {
     public class ItemSpawner : ITickable, IInitializable
     {
+        readonly Queue<Item> _itemsToSpawn;
         readonly List<Item.Factory> _items;
         readonly Settings _settings;
         readonly SignalBus _signalBus;
         private readonly LevelBoundary _levelBoundary;
 
-        float _desiredNumEnemies;
-        int _enemyCount;
+        float _desiredNumItems;
+        float _delayBetweenSpawns;
+        int _itemCount;
         float _lastSpawnTime;
 
         public ItemSpawner(List<Item.Factory> items,
@@ -22,6 +24,7 @@ namespace ClickerGame
                         SignalBus signalBus,
                         LevelBoundary levelBoundary)
         {
+            _itemsToSpawn = new Queue<Item>();
             _items = items;
             _settings = settings;
             _signalBus = signalBus;
@@ -31,32 +34,59 @@ namespace ClickerGame
         public void Initialize()
         {
             _signalBus.Subscribe<ItemDestroyedSignal>(OnItemDestroyed);
+            _signalBus.Subscribe<ItemToBeEnqueueSignal>(EnqueueItems);
         }
 
-        void OnItemDestroyed()
+        void OnItemDestroyed(ItemDestroyedSignal _)
         {
-            _enemyCount--;
+            _itemCount--;
         }
 
         public void Tick()
         {
-            _desiredNumEnemies += _settings.NumItemsIncreaseRate * Time.deltaTime;
-
-            if (_enemyCount < 5)
+            if (_itemsToSpawn.Count < _settings.MaxItemsToBeEnqueue)
             {
-                SpawnItem();
-                _enemyCount++;
+                EnqueueRandomItemByChance();
             }
 
+            if (_itemCount < _settings.MaxItemsInScreen
+                && Time.realtimeSinceStartup - _lastSpawnTime > _delayBetweenSpawns)
+            {
+                SpawnItem();              
+            }
+        }
+
+        void EnqueueItems(ItemToBeEnqueueSignal itemToBeEnqueue)
+        {
+            var itemFactory = _items.FirstOrDefault(x => x.GetType() == itemToBeEnqueue.Type);
+            _itemsToSpawn.Clear();
+
+            for (int i = 0; i < itemToBeEnqueue.Count; i++)
+            {
+                _itemsToSpawn.Enqueue(itemFactory.Create());
+            }
+        }
+
+        void EnqueueRandomItemByChance()
+        {
+            var itemFactory = SelectRandomItemByChance(_items);
+            _itemsToSpawn.Enqueue(itemFactory.Create());
         }
 
         void SpawnItem()
         {
-            var itemFactory = SelectRandomItemByChance(_items);
-            var item = itemFactory.Create();
+            if (!_itemsToSpawn.Any())
+            {
+                return;
+            }
+
+            var item = _itemsToSpawn.Dequeue();
             item.transform.position = GetRandomPosition();
+            item.gameObject.SetActive(true);
+            _itemCount++;
 
             _lastSpawnTime = Time.realtimeSinceStartup;
+            _delayBetweenSpawns = UnityEngine.Random.Range(_settings.MinSecondsBetweenSpawns, _settings.MaxSecondsBetweenSpawns);
         }
 
         Vector3 GetRandomPosition()
@@ -71,13 +101,9 @@ namespace ClickerGame
         {
             Item.Factory itemSelected = null;
 
-            // Calculate the summa of all portions.
             var poolSize = items.Sum(x => x.Settings.SpawnChance);
-
-            // Get a random integer from 0 to PoolSize.
             var randomNumber = UnityEngine.Random.Range(0f, poolSize) + 1f;
 
-            // Detect the item, which corresponds to current random number.
             var accumulatedProbability = 0f;
             for (var i = 0; i < items.Count; i++)
             {
@@ -95,11 +121,11 @@ namespace ClickerGame
         [Serializable]
         public class Settings
         {
-            [field: SerializeField] public float NumItemsIncreaseRate { get; private set; }
             [field: SerializeField] public float MaxItemsInScreen { get; private set; }
+            [field: SerializeField] public float MaxItemsToBeEnqueue { get; private set; }
 
-            [field: SerializeField] public float MinTimeBetweenSpawns { get; private set; } = 0.5f;
-            [field: SerializeField] public float MaxTimeBetweenSpawns { get; private set; } = 2f;
+            [field: SerializeField] public float MinSecondsBetweenSpawns { get; private set; } = 0.5f;
+            [field: SerializeField] public float MaxSecondsBetweenSpawns { get; private set; } = 2f;
         }
     }   
 }

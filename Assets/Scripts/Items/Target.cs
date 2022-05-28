@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using Zenject;
 
 namespace ClickerGame
@@ -15,9 +16,20 @@ namespace ClickerGame
             _settings = settings;
         }
 
+        protected override void OnMouseDown()
+        {
+            if (--Life <= 0)
+            {
+                SignalBus.Fire(new ItemDestroyedSignal(_settings.PointsWhenIsClicked));
+                SignalBus.Fire(new ItemToBeEnqueueSignal(typeof(Coin.Factory), _settings.AmountItemsToBeEnqueue));
+                Pool.Despawn(this);
+            }
+        }
+
         [Serializable]
         public new class Settings : Item.Settings
         {
+            [field: SerializeField] public int AmountItemsToBeEnqueue { get; private set; }
         }
 
         public new class Factory : Item.Factory

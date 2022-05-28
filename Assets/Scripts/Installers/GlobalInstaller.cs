@@ -83,6 +83,7 @@ namespace ClickerGame
             SignalBusInstaller.Install(Container);
 
             Container.DeclareSignal<ItemDestroyedSignal>();
+            Container.DeclareSignal<ItemToBeEnqueueSignal>();
         }
 
         [Serializable]
@@ -96,11 +97,25 @@ namespace ClickerGame
             [field: SerializeField] public GameObject TargetPrefab { get; private set; }
         }
 
-        class CoinPool : MonoPoolableMemoryPool<IMemoryPool, Coin> { }
-        class BlueSpherePool : MonoPoolableMemoryPool<IMemoryPool, BlueSphere> { }
-        class YellowBlockPool : MonoPoolableMemoryPool<IMemoryPool, YellowBlock> { }
-        class RedBoxPool : MonoPoolableMemoryPool<IMemoryPool, RedBox> { }
-        class ShieldPool : MonoPoolableMemoryPool<IMemoryPool, Shield> { }
-        class TargetPool : MonoPoolableMemoryPool<IMemoryPool, Target> { }
+        class MonoPoolableMemoryPoolCustom<TParam1, TValue> : MonoPoolableMemoryPool<TParam1, TValue> where TValue : Component, IPoolable<TParam1>
+        {
+            //disable gameObject.SetActive(true) in MonoPoolableMemoryPool Reinitialize method
+            protected override void Reinitialize(TParam1 p1, TValue item)
+            {
+                item.OnSpawned(p1);
+            }
+        }
+        
+        class CoinPool : MonoPoolableMemoryPoolCustom<IMemoryPool, Coin> { }
+
+        class BlueSpherePool : MonoPoolableMemoryPoolCustom<IMemoryPool, BlueSphere> { }
+
+        class YellowBlockPool : MonoPoolableMemoryPoolCustom<IMemoryPool, YellowBlock> { }
+
+        class RedBoxPool : MonoPoolableMemoryPoolCustom<IMemoryPool, RedBox> { }
+
+        class ShieldPool : MonoPoolableMemoryPoolCustom<IMemoryPool, Shield> { }
+
+        class TargetPool : MonoPoolableMemoryPoolCustom<IMemoryPool, Target> { }
     }
 }

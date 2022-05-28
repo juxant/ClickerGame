@@ -14,40 +14,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Item>k__BackingField:
     <Spawner>k__BackingField:
-      <NumItemsIncreaseRate>k__BackingField: 1
-      <MaxItemsInScreen>k__BackingField: 5
-      <MinTimeBetweenSpawns>k__BackingField: 0.5
-      <MaxTimeBetweenSpawns>k__BackingField: 2
+      <MaxItemsInScreen>k__BackingField: 50
+      <MaxItemsToBeEnqueue>k__BackingField: 10
+      <MinSecondsBetweenSpawns>k__BackingField: 0.5
+      <MaxSecondsBetweenSpawns>k__BackingField: 0.7
     <Coin>k__BackingField:
-      <PointsEarn>k__BackingField: 5
-      <PointsLose>k__BackingField: 2
+      <PointsWhenIsClicked>k__BackingField: 5
+      <PointsWhenIsMissed>k__BackingField: 0
       <Life>k__BackingField: 1
       <SpawnChance>k__BackingField: 20
+      <LifeTimeInSeconds>k__BackingField: 5
     <BlueSphere>k__BackingField:
-      <PointsEarn>k__BackingField: 5
-      <PointsLose>k__BackingField: 2
+      <PointsWhenIsClicked>k__BackingField: 2
+      <PointsWhenIsMissed>k__BackingField: 0
       <Life>k__BackingField: 1
       <SpawnChance>k__BackingField: 20
+      <LifeTimeInSeconds>k__BackingField: 5
     <YellowBlock>k__BackingField:
-      <PointsEarn>k__BackingField: 5
-      <PointsLose>k__BackingField: 2
+      <PointsWhenIsClicked>k__BackingField: 1
+      <PointsWhenIsMissed>k__BackingField: 0
       <Life>k__BackingField: 1
       <SpawnChance>k__BackingField: 20
+      <LifeTimeInSeconds>k__BackingField: 5
     <RedBox>k__BackingField:
-      <PointsEarn>k__BackingField: 5
-      <PointsLose>k__BackingField: 2
+      <PointsWhenIsClicked>k__BackingField: -5
+      <PointsWhenIsMissed>k__BackingField: 0
       <Life>k__BackingField: 1
       <SpawnChance>k__BackingField: 20
+      <LifeTimeInSeconds>k__BackingField: 5
     <Shield>k__BackingField:
-      <PointsEarn>k__BackingField: 5
-      <PointsLose>k__BackingField: 0
-      <Life>k__BackingField: 1
+      <PointsWhenIsClicked>k__BackingField: 10
+      <PointsWhenIsMissed>k__BackingField: 5
+      <Life>k__BackingField: 5
       <SpawnChance>k__BackingField: 20
+      <LifeTimeInSeconds>k__BackingField: 5
     <Target>k__BackingField:
-      <PointsEarn>k__BackingField: 5
-      <PointsLose>k__BackingField: 2
+      <PointsWhenIsClicked>k__BackingField: 0
+      <PointsWhenIsMissed>k__BackingField: 10
       <Life>k__BackingField: 1
       <SpawnChance>k__BackingField: 20
+      <LifeTimeInSeconds>k__BackingField: 5
+      <AmountItemsToBeEnqueue>k__BackingField: 5
   <GlobalInstaller>k__BackingField:
     <CoinPrefab>k__BackingField: {fileID: 1591165099382186, guid: 160a6121b4d25254da31bdab63ad82b7, type: 3}
     <BlueSpherePrefab>k__BackingField: {fileID: 1808265353395088, guid: 296b6c6ad62626c48aef7fa6c5e2a9a8, type: 3}

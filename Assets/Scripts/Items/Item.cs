@@ -6,58 +6,66 @@ namespace ClickerGame
 {
     public abstract class Item : MonoBehaviour, IPoolable<IMemoryPool>
     {
-        float _startTime;
-
-        IMemoryPool _pool;
         Settings _settings;
-        SignalBus _signalBus;
 
-        public virtual void Construct(Settings settings,
+        protected float StartTime { get; set; }
+        protected float Life { get; set; }
+        protected IMemoryPool Pool { get; set; }       
+        protected SignalBus SignalBus { get; private set; }
+
+        protected virtual void Construct(Settings settings,
                                     SignalBus signalBus)
         {
             _settings = settings;
-            _signalBus = signalBus;
+            SignalBus = signalBus;
         }
 
-        public void Destroy()
+        protected void Destroy(float points)
         {
-            _signalBus.Fire<ItemDestroyedSignal>();
-            _pool.Despawn(this);
+            SignalBus.Fire(new ItemDestroyedSignal(points));
+            Pool.Despawn(this);
         }
 
-        public virtual void OnMouseDown()
+        protected virtual void OnMouseDown()
         {
-            Destroy();
+            if (--Life <= 0)
+            {
+                Destroy(_settings.PointsWhenIsClicked);
+            }           
         }
 
-        public virtual void Update()
+        protected virtual void Update()
         {
-            //transform.position -= transform.right * _settings.Speed * Time.deltaTime;
+            if (Time.realtimeSinceStartup - StartTime > _settings.LifeTimeInSeconds)
+            {
+                Destroy(_settings.PointsWhenIsMissed);
+            }
+        }
 
-            //if (Time.realtimeSinceStartup - _startTime > _settings.LifeTime)
-            //{
-            //    Destroy();
-            //}
+        private void OnEnable()
+        {
+            StartTime = Time.realtimeSinceStartup;
         }
 
         public virtual void OnSpawned(IMemoryPool pool)
         {
-            _pool = pool;
-            _startTime = Time.realtimeSinceStartup;
+            Pool = pool;            
+            Life = _settings.Life;
         }
 
         public virtual void OnDespawned()
         {
-            _pool = null;
+            Pool = null;
         }
 
         [Serializable]
         public abstract class Settings
         {
-            [field: SerializeField] public float PointsEarn { get; private set; }
-            [field: SerializeField] public float PointsLose { get; private set; }
+            [field: SerializeField] public float PointsWhenIsClicked { get; private set; }
+            [field: SerializeField] public float PointsWhenIsMissed { get; private set; }
             [field: SerializeField] public float Life { get; private set; }
             [field: SerializeField] public float SpawnChance { get; private set; }
+            [field: SerializeField] public float LifeTimeInSeconds { get; private set; }
         }
 
         public abstract class Factory : PlaceholderFactory<Item>, IFactory<Item>
