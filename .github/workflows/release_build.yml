@@ -6,8 +6,8 @@ env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
-  BuildForWindows:
-    name: build for Windows
+  testAndBuild:
+    name: Test and build for Windows
     runs-on: ubuntu-latest
     steps:
       # Checkout (without LFS)
@@ -30,7 +30,6 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-
       # Cache
       - uses: actions/cache@v2
         with:
@@ -38,6 +37,9 @@ jobs:
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
             Library-
+      # Test
+      - name: Run tests
+        uses: game-ci/unity-test-runner@v2
 
       # Build
       - name: Build project
