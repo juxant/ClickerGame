@@ -3,7 +3,7 @@ using Zenject;
 
 namespace ClickerGame.Items
 {
-    public class Coin : Item
+    public class Sphere : Item
     {
         [Inject]
         public void Construct(Settings settings, SignalBus signalBus)

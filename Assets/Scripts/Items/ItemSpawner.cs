@@ -1,20 +1,23 @@
+using ClickerGame.Game.Signals;
+using ClickerGame.Items.Signals;
+using ClickerGame.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
 
-namespace ClickerGame
+namespace ClickerGame.Items
 {
     public class ItemSpawner : ITickable, IInitializable, IDisposable
     {
-        readonly Queue<Item> _itemsToSpawn;
+        readonly Queue<Item> _itemsToSpawn = new Queue<Item>();
         readonly List<Item.Factory> _itemFactories;
         readonly Settings _settings;
         readonly SignalBus _signalBus;
         readonly LevelBoundary _levelBoundary;
 
-        bool _isPlaying;
+        bool _isPlaying = true;
         float _delayBetweenSpawns;
         int _itemCount;
         float _lastSpawnTime;
@@ -24,8 +27,6 @@ namespace ClickerGame
                         SignalBus signalBus,
                         LevelBoundary levelBoundary)
         {
-            _isPlaying = true;
-            _itemsToSpawn = new Queue<Item>();
             _itemFactories = itemFactories;
             _settings = settings;
             _signalBus = signalBus;
@@ -64,7 +65,7 @@ namespace ClickerGame
             if (_itemCount < _settings.MaxItemsInScreen
                 && Time.realtimeSinceStartup - _lastSpawnTime > _delayBetweenSpawns)
             {
-                SpawnItem();              
+                SpawnItem();
             }
         }
 
@@ -106,7 +107,7 @@ namespace ClickerGame
         {
             var randomX = UnityEngine.Random.Range(_levelBoundary.Left, _levelBoundary.Right);
             var randomY = UnityEngine.Random.Range(_levelBoundary.Bottom, _levelBoundary.Top);
-            
+
             return new Vector3(randomX, randomY);
         }
 
@@ -125,7 +126,7 @@ namespace ClickerGame
                 {
                     itemSelected = items[i];
                     break;
-                }                  
+                }
             }
 
             return itemSelected;
@@ -147,5 +148,5 @@ namespace ClickerGame
             [field: SerializeField] public float MinSecondsBetweenSpawns { get; private set; } = 0.5f;
             [field: SerializeField] public float MaxSecondsBetweenSpawns { get; private set; } = 2f;
         }
-    }   
+    }
 }

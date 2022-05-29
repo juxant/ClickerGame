@@ -1,30 +1,22 @@
 ﻿using System;
 using Zenject;
 
-namespace ClickerGame
+namespace ClickerGame.Items
 {
     public class Shield : Item
     {
-        Settings _settings;
-
         [Inject]
-        public void Construct(Settings settings,
-                            SignalBus signalBus)
+        public void Construct(Settings settings, SignalBus signalBus)
         {
             base.Construct(settings, signalBus);
-            _settings = settings;
         }
 
         [Serializable]
-        public new class Settings : Item.Settings
-        {
-        }
+        public new class Settings : Item.Settings { }
 
         public new class Factory : Item.Factory
         {
-            public Factory(Settings settings) : base(settings)
-            {
-            }
+            public Factory(Settings settings) : base(settings) { }
         }
     }
 }

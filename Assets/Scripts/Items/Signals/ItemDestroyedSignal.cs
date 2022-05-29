@@ -1,4 +1,4 @@
-namespace ClickerGame
+namespace ClickerGame.Items.Signals
 {
     public struct ItemDestroyedSignal
     {

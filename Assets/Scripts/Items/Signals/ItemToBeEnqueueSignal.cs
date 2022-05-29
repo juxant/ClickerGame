@@ -1,6 +1,6 @@
 using System;
 
-namespace ClickerGame
+namespace ClickerGame.Items.Signals
 {
     public class ItemToBeEnqueueSignal
     {
@@ -11,6 +11,6 @@ namespace ClickerGame
         {
             Type = type;
             Count = count;
-        }       
+        }
     }
 }

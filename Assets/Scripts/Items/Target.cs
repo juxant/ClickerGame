@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ClickerGame.Items.Signals;
+using System;
 using UnityEngine;
 using Zenject;
 
-namespace ClickerGame
+namespace ClickerGame.Items
 {
     public class Target : Item
     {
@@ -34,9 +35,7 @@ namespace ClickerGame
 
         public new class Factory : Item.Factory
         {
-            public Factory(Settings settings) : base(settings)
-            {
-            }
+            public Factory(Settings settings) : base(settings) { }
         }
     }
 }

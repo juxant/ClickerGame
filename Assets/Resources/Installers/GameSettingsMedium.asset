@@ -12,31 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f040ed3a73fc8e49a49fe95bf4d59b4, type: 3}
   m_Name: GameSettingsMedium
   m_EditorClassIdentifier: 
-  <Spawner>k__BackingField:
-    <MaxItemsInScreen>k__BackingField: 10
-    <MaxItemsToBeEnqueue>k__BackingField: 10
+  <ItemSpawner>k__BackingField:
+    <MaxItemsInScreen>k__BackingField: 25
+    <MaxItemsToBeEnqueue>k__BackingField: 25
     <MinSecondsBetweenSpawns>k__BackingField: 0.5
-    <MaxSecondsBetweenSpawns>k__BackingField: 2
+    <MaxSecondsBetweenSpawns>k__BackingField: 1
   <Item>k__BackingField:
     <Coin>k__BackingField:
       <PointsWhenIsClicked>k__BackingField: 5
-      <PointsWhenIsMissed>k__BackingField: 0
+      <PointsWhenIsMissed>k__BackingField: -1
       <Life>k__BackingField: 1
-      <SpawnChance>k__BackingField: 20
+      <SpawnChance>k__BackingField: 10
       <LifeTimeInSeconds>k__BackingField: 5
-    <BlueSphere>k__BackingField:
+    <Sphere>k__BackingField:
       <PointsWhenIsClicked>k__BackingField: 2
-      <PointsWhenIsMissed>k__BackingField: 0
+      <PointsWhenIsMissed>k__BackingField: -1
       <Life>k__BackingField: 1
       <SpawnChance>k__BackingField: 20
       <LifeTimeInSeconds>k__BackingField: 5
-    <YellowBlock>k__BackingField:
+    <Block>k__BackingField:
       <PointsWhenIsClicked>k__BackingField: 1
-      <PointsWhenIsMissed>k__BackingField: 0
+      <PointsWhenIsMissed>k__BackingField: -1
       <Life>k__BackingField: 1
-      <SpawnChance>k__BackingField: 20
+      <SpawnChance>k__BackingField: 30
       <LifeTimeInSeconds>k__BackingField: 5
-    <RedBox>k__BackingField:
+    <Box>k__BackingField:
       <PointsWhenIsClicked>k__BackingField: -5
       <PointsWhenIsMissed>k__BackingField: 0
       <Life>k__BackingField: 1
@@ -52,6 +52,6 @@ MonoBehaviour:
       <PointsWhenIsClicked>k__BackingField: 0
       <PointsWhenIsMissed>k__BackingField: -10
       <Life>k__BackingField: 1
-      <SpawnChance>k__BackingField: 20
+      <SpawnChance>k__BackingField: 5
       <LifeTimeInSeconds>k__BackingField: 5
       <AmountItemsToBeEnqueue>k__BackingField: 5

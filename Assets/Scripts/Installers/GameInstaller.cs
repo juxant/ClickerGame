@@ -1,40 +1,38 @@
-using System;
-using System.Collections.Generic;
+using ClickerGame.Game;
+using ClickerGame.Items;
+using ClickerGame.Scenes;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Zenject;
 
-namespace ClickerGame
+namespace ClickerGame.Installers
 {
     public class GameInstaller : MonoInstaller
     {
         [Inject] readonly GameController _gameController;
+        [Inject] readonly GameController.Settings _gameControllerSettings;
         [Inject] readonly GlobalSettings _globalSettings;
-
-        [SerializeField] string _defaultDifficulty = "GameSettingsMedium";
 
         public override void InstallBindings()
         {
-            var gameSettingsInstaller = GameSettingsInstaller.InstallFromResource($"Installers/{_gameController?.DifficultyName ?? _defaultDifficulty}", Container);
-            var items = new GameObject("Items").transform;
+            var gameSettingsInstaller = GameSettingsInstaller.InstallFromResource($"Installers/{_gameController?.DifficultyName ?? _gameControllerSettings.DefaultDifficulty}", Container);
+            var items = new GameObject(nameof(Item)).transform;
 
-            var coins = new GameObject("Coins").transform;
+            var coins = new GameObject(nameof(Coin)).transform;
             coins.SetParent(items.transform);
 
-            var blueSphere = new GameObject("BlueSphere").transform;
+            var blueSphere = new GameObject(nameof(Sphere)).transform;
             blueSphere.SetParent(items.transform);
 
-            var yellowBlock = new GameObject("YellowBlock").transform;
+            var yellowBlock = new GameObject(nameof(Block)).transform;
             yellowBlock.SetParent(items.transform);
 
-            var redBox = new GameObject("RedBox").transform;
+            var redBox = new GameObject(nameof(Box)).transform;
             redBox.SetParent(items.transform);
 
-            var shield = new GameObject("Shield").transform;
+            var shield = new GameObject(nameof(Shield)).transform;
             shield.SetParent(items.transform);
 
-            var target = new GameObject("Target").transform;
+            var target = new GameObject(nameof(Target)).transform;
             target.SetParent(items.transform);
 
             Container.BindFactoryCustomInterface<Item, Coin.Factory, Item.Factory>()
@@ -44,25 +42,25 @@ namespace ClickerGame
                 .FromComponentInNewPrefab(_globalSettings.CoinPrefab)
                 .UnderTransform(coins));
 
-            Container.BindFactoryCustomInterface<Item, BlueSphere.Factory, Item.Factory>()
-                .To<BlueSphere>()
-                .FromPoolableMemoryPool<BlueSphere, BlueSpherePool>(poolBinder => poolBinder
+            Container.BindFactoryCustomInterface<Item, Sphere.Factory, Item.Factory>()
+                .To<Sphere>()
+                .FromPoolableMemoryPool<Sphere, SpherePool>(poolBinder => poolBinder
                 .WithInitialSize(20)
-                .FromComponentInNewPrefab(_globalSettings.BlueSpherePrefab)
+                .FromComponentInNewPrefab(_globalSettings.SpherePrefab)
                 .UnderTransform(blueSphere));
 
-            Container.BindFactoryCustomInterface<Item, YellowBlock.Factory, Item.Factory>()
-                .To<YellowBlock>()
-                .FromPoolableMemoryPool<YellowBlock, YellowBlockPool>(poolBinder => poolBinder
+            Container.BindFactoryCustomInterface<Item, Block.Factory, Item.Factory>()
+                .To<Block>()
+                .FromPoolableMemoryPool<Block, BlockPool>(poolBinder => poolBinder
                 .WithInitialSize(20)
-                .FromComponentInNewPrefab(_globalSettings.YellowBlockPrefab)
+                .FromComponentInNewPrefab(_globalSettings.BlockPrefab)
                 .UnderTransform(yellowBlock));
 
-            Container.BindFactoryCustomInterface<Item, RedBox.Factory, Item.Factory>()
-                .To<RedBox>()
-                .FromPoolableMemoryPool<RedBox, RedBoxPool>(poolBinder => poolBinder
+            Container.BindFactoryCustomInterface<Item, Box.Factory, Item.Factory>()
+                .To<Box>()
+                .FromPoolableMemoryPool<Box, BoxPool>(poolBinder => poolBinder
                 .WithInitialSize(20)
-                .FromComponentInNewPrefab(_globalSettings.RedBoxPrefab)
+                .FromComponentInNewPrefab(_globalSettings.BoxPrefab)
                 .UnderTransform(redBox));
 
             Container.BindFactoryCustomInterface<Item, Shield.Factory, Item.Factory>()
@@ -81,9 +79,9 @@ namespace ClickerGame
 
             Container.Bind<LevelBoundary>().AsSingle();
             Container.BindInterfacesAndSelfTo<ItemSpawner>().AsSingle();
-        }    
+        }
 
-        
+
 
         class MonoPoolableMemoryPoolCustom<TParam1, TValue> : MonoPoolableMemoryPool<TParam1, TValue> where TValue : Component, IPoolable<TParam1>
         {
@@ -96,11 +94,11 @@ namespace ClickerGame
 
         class CoinPool : MonoPoolableMemoryPoolCustom<IMemoryPool, Coin> { }
 
-        class BlueSpherePool : MonoPoolableMemoryPoolCustom<IMemoryPool, BlueSphere> { }
+        class SpherePool : MonoPoolableMemoryPoolCustom<IMemoryPool, Sphere> { }
 
-        class YellowBlockPool : MonoPoolableMemoryPoolCustom<IMemoryPool, YellowBlock> { }
+        class BlockPool : MonoPoolableMemoryPoolCustom<IMemoryPool, Block> { }
 
-        class RedBoxPool : MonoPoolableMemoryPoolCustom<IMemoryPool, RedBox> { }
+        class BoxPool : MonoPoolableMemoryPoolCustom<IMemoryPool, Box> { }
 
         class ShieldPool : MonoPoolableMemoryPoolCustom<IMemoryPool, Shield> { }
 

@@ -1,8 +1,9 @@
+using ClickerGame.Game.Signals;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace ClickerGame
+namespace ClickerGame.Game
 {
     public class GuiHandler : MonoBehaviour
     {

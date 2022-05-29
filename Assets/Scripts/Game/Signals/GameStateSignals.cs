@@ -1,4 +1,4 @@
-namespace ClickerGame
+namespace ClickerGame.Game.Signals
 {
     public class StartGameSignal
     {

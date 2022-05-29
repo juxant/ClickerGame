@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Zenject;
 
-namespace ClickerGame
+namespace ClickerGame.Scenes
 {
     public class LevelBoundary
     {

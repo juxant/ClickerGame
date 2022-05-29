@@ -1,8 +1,10 @@
+using ClickerGame.Game.Signals;
+using ClickerGame.Items.Signals;
 using System;
 using UnityEngine;
 using Zenject;
 
-namespace ClickerGame
+namespace ClickerGame.Items
 {
     public abstract class Item : MonoBehaviour, IPoolable<IMemoryPool>
     {
@@ -10,7 +12,7 @@ namespace ClickerGame
 
         protected float StartTime { get; set; }
         protected float Life { get; set; }
-        protected IMemoryPool Pool { get; set; }       
+        protected IMemoryPool Pool { get; set; }
         protected SignalBus SignalBus { get; private set; }
 
         protected virtual void Construct(Settings settings,
@@ -52,7 +54,7 @@ namespace ClickerGame
             if (gameObject.activeSelf)
             {
                 Pool.Despawn(this);
-            }           
+            }
         }
 
         protected void Destroy(float points)
@@ -60,10 +62,10 @@ namespace ClickerGame
             SignalBus.Fire(new ItemDestroyedSignal(points));
             Despawn();
         }
-       
+
         public virtual void OnSpawned(IMemoryPool pool)
         {
-            Pool = pool;            
+            Pool = pool;
             Life = _settings.Life;
         }
 

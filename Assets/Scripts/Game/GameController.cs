@@ -1,12 +1,11 @@
+using ClickerGame.Game.Signals;
+using ClickerGame.Items.Signals;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Zenject;
 
-namespace ClickerGame
+namespace ClickerGame.Game
 {
     public class GameController : ITickable, IInitializable, IDisposable
     {
@@ -47,7 +46,7 @@ namespace ClickerGame
             {
                 ElapsedTime = _settings.MaxTimeToPlay;
                 _isPlaying = false;
-                _signalBus.Fire(new GameOverSignal("You lose"));
+                _signalBus.Fire(new GameOverSignal(_settings.LoseMessage));
             }
         }
 
@@ -74,7 +73,7 @@ namespace ClickerGame
             if (TotalPoints >= _settings.PointsToWin)
             {
                 _isPlaying = false;
-                _signalBus.Fire(new GameOverSignal("You won"));
+                _signalBus.Fire(new GameOverSignal(_settings.WinMessage));
             }
         }
 
@@ -87,8 +86,11 @@ namespace ClickerGame
         [Serializable]
         public class Settings
         {
-            [field: SerializeField] public float MaxTimeToPlay { get; private set; } = 120f; 
-            [field: SerializeField] public float PointsToWin { get; private set; } = 200f; 
+            [field: SerializeField] public string DefaultDifficulty { get; private set; } = "GameSettingsMedium";
+            [field: SerializeField] public string WinMessage { get; private set; } = "You won";
+            [field: SerializeField] public string LoseMessage { get; private set; } = "You lose";
+            [field: SerializeField] public float MaxTimeToPlay { get; private set; } = 120f;
+            [field: SerializeField] public float PointsToWin { get; private set; } = 100f;
         }
     }
 }

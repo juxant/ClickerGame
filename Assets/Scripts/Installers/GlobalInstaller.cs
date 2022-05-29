@@ -1,6 +1,9 @@
+using ClickerGame.Game;
+using ClickerGame.Game.Signals;
+using ClickerGame.Items.Signals;
 using Zenject;
 
-namespace ClickerGame
+namespace ClickerGame.Installers
 {
     public class GlobalInstaller : MonoInstaller
     {
