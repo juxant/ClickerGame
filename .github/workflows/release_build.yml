@@ -41,7 +41,7 @@ jobs:
 
       # Build
       - name: Build project
-      - uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@v2
         id: buildStep
         with:
           targetPlatform: StandaloneWindows64
