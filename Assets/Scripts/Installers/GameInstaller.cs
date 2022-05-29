@@ -9,11 +9,14 @@ namespace ClickerGame
 {
     public class GameInstaller : MonoInstaller
     {
-        [Inject] GameController _gameController;
+        [Inject] readonly GameController _gameController;
+        [Inject] readonly GlobalSettings _globalSettings;
+
+        [SerializeField] string _defaultDifficulty = "GameSettingsMedium";
 
         public override void InstallBindings()
         {
-            var gameSettingsInstaller = GameSettingsInstaller.InstallFromResource($"Installers/{_gameController.DifficultyName}", Container);
+            var gameSettingsInstaller = GameSettingsInstaller.InstallFromResource($"Installers/{_gameController?.DifficultyName ?? _defaultDifficulty}", Container);
             var items = new GameObject("Items").transform;
 
             var coins = new GameObject("Coins").transform;
@@ -38,64 +41,49 @@ namespace ClickerGame
                 .To<Coin>()
                 .FromPoolableMemoryPool<Coin, CoinPool>(poolBinder => poolBinder
                 .WithInitialSize(20)
-                .FromComponentInNewPrefab(gameSettingsInstaller.GameInstaller.CoinPrefab)
+                .FromComponentInNewPrefab(_globalSettings.CoinPrefab)
                 .UnderTransform(coins));
 
             Container.BindFactoryCustomInterface<Item, BlueSphere.Factory, Item.Factory>()
                 .To<BlueSphere>()
                 .FromPoolableMemoryPool<BlueSphere, BlueSpherePool>(poolBinder => poolBinder
                 .WithInitialSize(20)
-                .FromComponentInNewPrefab(gameSettingsInstaller.GameInstaller.BlueSpherePrefab)
+                .FromComponentInNewPrefab(_globalSettings.BlueSpherePrefab)
                 .UnderTransform(blueSphere));
 
             Container.BindFactoryCustomInterface<Item, YellowBlock.Factory, Item.Factory>()
                 .To<YellowBlock>()
                 .FromPoolableMemoryPool<YellowBlock, YellowBlockPool>(poolBinder => poolBinder
                 .WithInitialSize(20)
-                .FromComponentInNewPrefab(gameSettingsInstaller.GameInstaller.YellowBlockPrefab)
+                .FromComponentInNewPrefab(_globalSettings.YellowBlockPrefab)
                 .UnderTransform(yellowBlock));
 
             Container.BindFactoryCustomInterface<Item, RedBox.Factory, Item.Factory>()
                 .To<RedBox>()
                 .FromPoolableMemoryPool<RedBox, RedBoxPool>(poolBinder => poolBinder
                 .WithInitialSize(20)
-                .FromComponentInNewPrefab(gameSettingsInstaller.GameInstaller.RedBoxPrefab)
+                .FromComponentInNewPrefab(_globalSettings.RedBoxPrefab)
                 .UnderTransform(redBox));
 
             Container.BindFactoryCustomInterface<Item, Shield.Factory, Item.Factory>()
                 .To<Shield>()
                 .FromPoolableMemoryPool<Shield, ShieldPool>(poolBinder => poolBinder
                 .WithInitialSize(20)
-                .FromComponentInNewPrefab(gameSettingsInstaller.GameInstaller.ShieldPrefab)
+                .FromComponentInNewPrefab(_globalSettings.ShieldPrefab)
                 .UnderTransform(shield));
 
             Container.BindFactoryCustomInterface<Item, Target.Factory, Item.Factory>()
                 .To<Target>()
                 .FromPoolableMemoryPool<Target, TargetPool>(poolBinder => poolBinder
                 .WithInitialSize(20)
-                .FromComponentInNewPrefab(gameSettingsInstaller.GameInstaller.TargetPrefab)
+                .FromComponentInNewPrefab(_globalSettings.TargetPrefab)
                 .UnderTransform(target));
 
             Container.Bind<LevelBoundary>().AsSingle();
             Container.BindInterfacesAndSelfTo<ItemSpawner>().AsSingle();
-        }
+        }    
 
-        public static void ReturnToMainScreen()
-        {
-            SceneManager.LoadScene(0);
-        }
-       
-
-        [Serializable]
-        public class Settings
-        {
-            [field: SerializeField] public GameObject CoinPrefab { get; private set; }
-            [field: SerializeField] public GameObject BlueSpherePrefab { get; private set; }
-            [field: SerializeField] public GameObject YellowBlockPrefab { get; private set; }
-            [field: SerializeField] public GameObject RedBoxPrefab { get; private set; }
-            [field: SerializeField] public GameObject ShieldPrefab { get; private set; }
-            [field: SerializeField] public GameObject TargetPrefab { get; private set; }
-        }
+        
 
         class MonoPoolableMemoryPoolCustom<TParam1, TValue> : MonoPoolableMemoryPool<TParam1, TValue> where TValue : Component, IPoolable<TParam1>
         {

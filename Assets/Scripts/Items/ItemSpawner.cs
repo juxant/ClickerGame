@@ -12,9 +12,9 @@ namespace ClickerGame
         readonly List<Item.Factory> _itemFactories;
         readonly Settings _settings;
         readonly SignalBus _signalBus;
-        private readonly LevelBoundary _levelBoundary;
+        readonly LevelBoundary _levelBoundary;
 
-        float _desiredNumItems;
+        bool _isPlaying;
         float _delayBetweenSpawns;
         int _itemCount;
         float _lastSpawnTime;
@@ -24,6 +24,7 @@ namespace ClickerGame
                         SignalBus signalBus,
                         LevelBoundary levelBoundary)
         {
+            _isPlaying = true;
             _itemsToSpawn = new Queue<Item>();
             _itemFactories = itemFactories;
             _settings = settings;
@@ -35,19 +36,29 @@ namespace ClickerGame
         {
             _signalBus.Subscribe<ItemDestroyedSignal>(OnItemDestroyed);
             _signalBus.Subscribe<ItemToBeEnqueueSignal>(EnqueueItems);
+            _signalBus.Subscribe<GameOverSignal>(DisableSpawner);
         }
 
-        void OnItemDestroyed(ItemDestroyedSignal _)
+        void DisableSpawner()
+        {
+            _isPlaying = false;
+        }
+
+        void OnItemDestroyed()
         {
             _itemCount--;
         }
 
         public void Tick()
         {
+            if (!_isPlaying)
+            {
+                return;
+            }
+
             if (_itemsToSpawn.Count < _settings.MaxItemsToBeEnqueue)
             {
                 EnqueueRandomItemByChance();
-                Debug.Log(_settings.MaxItemsInScreen);
             }
 
             if (_itemCount < _settings.MaxItemsInScreen
@@ -124,6 +135,7 @@ namespace ClickerGame
         {
             _signalBus.Unsubscribe<ItemDestroyedSignal>(OnItemDestroyed);
             _signalBus.Unsubscribe<ItemToBeEnqueueSignal>(EnqueueItems);
+            _signalBus.Unsubscribe<GameOverSignal>(DisableSpawner);
         }
 
         [Serializable]

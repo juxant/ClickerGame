@@ -18,20 +18,12 @@ namespace ClickerGame
         {
             _settings = settings;
             SignalBus = signalBus;
+            SignalBus.Subscribe<GameOverSignal>(Despawn);
         }
 
-        protected void Destroy(float points)
+        protected void OnEnable()
         {
-            SignalBus.Fire(new ItemDestroyedSignal(points));
-            Pool.Despawn(this);
-        }
-
-        protected virtual void OnMouseDown()
-        {
-            if (--Life <= 0)
-            {
-                Destroy(_settings.PointsWhenIsClicked);
-            }           
+            StartTime = Time.realtimeSinceStartup;
         }
 
         protected virtual void Update()
@@ -42,11 +34,33 @@ namespace ClickerGame
             }
         }
 
-        private void OnEnable()
+        protected virtual void OnMouseDown()
         {
-            StartTime = Time.realtimeSinceStartup;
+            if (--Life <= 0)
+            {
+                Destroy(_settings.PointsWhenIsClicked);
+            }
         }
 
+        private void OnDestroy()
+        {
+            SignalBus.Unsubscribe<GameOverSignal>(Despawn);
+        }
+
+        protected void Despawn()
+        {
+            if (gameObject.activeSelf)
+            {
+                Pool.Despawn(this);
+            }           
+        }
+
+        protected void Destroy(float points)
+        {
+            SignalBus.Fire(new ItemDestroyedSignal(points));
+            Despawn();
+        }
+       
         public virtual void OnSpawned(IMemoryPool pool)
         {
             Pool = pool;            

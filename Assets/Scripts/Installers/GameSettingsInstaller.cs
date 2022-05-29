@@ -7,27 +7,23 @@ namespace ClickerGame
     [CreateAssetMenu(menuName = "ClickerGame/Game Settings")]
     public class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInstaller>
     {
-        [field: SerializeField] public GameInstaller.Settings GameInstaller { get; private set; }
-        [field: SerializeField] public LevelBoundary.Settings LevelBoundary { get; private set; }
+        [field: SerializeField] public ItemSpawner.Settings Spawner { get; private set; }
         [field: SerializeField] public ItemSettings Item { get; private set; }
                
         public override void InstallBindings()
         {
-            Container.BindInstance(Item.Spawner);
+            Container.BindInstance(Spawner);
             Container.BindInstance(Item.Coin);
             Container.BindInstance(Item.BlueSphere);
             Container.BindInstance(Item.YellowBlock);
             Container.BindInstance(Item.RedBox);
             Container.BindInstance(Item.Shield);
             Container.BindInstance(Item.Target);
-            Container.BindInstance(GameInstaller);
-            Container.BindInstance(LevelBoundary);
         }
 
         [Serializable]
         public class ItemSettings
-        {
-            [field: SerializeField] public ItemSpawner.Settings Spawner { get; private set; }
+        {           
             [field: SerializeField] public Coin.Settings Coin { get; private set; }
             [field: SerializeField] public BlueSphere.Settings BlueSphere { get; private set; }
             [field: SerializeField] public YellowBlock.Settings YellowBlock { get; private set; }

@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace ClickerGame
 {
     public class GlobalInstaller : MonoInstaller
-    { 
+    {
         public override void InstallBindings()
         {
             InstallSignals();
@@ -21,6 +17,8 @@ namespace ClickerGame
 
             Container.DeclareSignal<ItemDestroyedSignal>();
             Container.DeclareSignal<ItemToBeEnqueueSignal>();
+            Container.DeclareSignal<StartGameSignal>();
+            Container.DeclareSignal<GameOverSignal>();
         }
     }
 }

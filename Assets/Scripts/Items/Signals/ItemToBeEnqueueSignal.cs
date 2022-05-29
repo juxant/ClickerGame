@@ -2,7 +2,7 @@ using System;
 
 namespace ClickerGame
 {
-    public struct ItemToBeEnqueueSignal
+    public class ItemToBeEnqueueSignal
     {
         public Type Type { get; }
         public int Count { get; }
